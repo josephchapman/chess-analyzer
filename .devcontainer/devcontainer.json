@@ -1,0 +1,27 @@
+{
+  "name": "Ubuntu",
+  "image": "ubuntu:jammy",
+  "remoteUser": "contend",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.profiles.linux": {
+          "bash": {
+            "path": "bash",
+            "icon": "terminal-bash"
+          }
+        },
+        "terminal.integrated.defaultProfile.linux": "bash"
+      }
+    }
+  },
+  "features": {
+    "./src/go/": {},
+    "./src/node.js/": {},
+    "./src/stockfish/": {},
+    "./src/user/": {
+      "username": "contend"
+    },
+    "./src/utils/": {}
+  }
+}

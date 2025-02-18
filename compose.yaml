@@ -1,0 +1,10 @@
+---
+services:
+  chess-analyzer:
+    build: .
+    volumes:
+      - db-data:/var/lib/data
+    ports:
+      - "24377:24377"
+volumes:
+  db-data:
