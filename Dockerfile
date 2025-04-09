@@ -43,5 +43,6 @@ RUN TMP=$(mktemp -d /tmp/stockfish.XXXXXX) \
 &&  curl -fsSL -o ${TMP}/stockfish-ubuntu-x86-64.tar https://github.com/official-stockfish/Stockfish/releases/download/sf_17/stockfish-ubuntu-x86-64.tar \
 &&  tar -xvf ${TMP}/stockfish-ubuntu-x86-64.tar -C ${TMP}/ \
 &&  mv ${TMP}/stockfish/stockfish-ubuntu-x86-64 /usr/local/bin/stockfish
+RUN mkdir /var/lib/data/
 COPY --from=build /bin/chess-analyzer /usr/local/bin/chess-analyzer
 CMD ["/usr/local/bin/chess-analyzer"]
