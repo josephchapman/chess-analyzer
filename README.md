@@ -2,14 +2,16 @@
 
 Provides an API to allow the analysis of chess games.
 
-If `docker-compose` is installed, use it to run the container with exposed port and mounted persistent storage:
-```bash
-docker compose up
-```
-
 Set player name:
 ```bash
 PLAYER="playername"
+```
+
+## Docker Compose
+
+If `docker-compose` is installed, use it to run the container with exposed port and mounted persistent storage:
+```bash
+docker compose up
 ```
 
 View available archives:
@@ -48,3 +50,10 @@ docker run -it --rm -v chess-analyzer_db-data:/var/lib/data ubuntu:jammy /bin/ls
 ```
 
 For `.devcontainer`, either clone or link the `contend` repository's `src/` dir to `.devcontainer/src/`.
+
+
+## k8s
+
+```bash
+kubectl -n chess-analyzer exec -it client -c client -- /usr/bin/curl -X GET http://127.0.0.1:3001/api/${PLAYER}
+```
