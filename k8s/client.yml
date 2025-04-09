@@ -1,0 +1,42 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: client
+  namespace: chess-analyzer
+  labels:
+    app: client
+spec:
+  serviceAccountName: client
+  restartPolicy: Always
+  containers:
+  - name: client
+    image: alpine:latest
+    command: ['sh', '-c', 'apk update && apk add curl jq && sleep 86400']
+    resources:
+      limits:
+        memory: "64Mi"
+        cpu: "250m"
+  - name: envoy
+    image: envoyproxy/envoy:v1.25.1
+    imagePullPolicy: Always
+    args: ["-l", "debug", "--local-address-ip-version", "v4", "-c", "/run/envoy/envoy.yaml"]
+    resources:
+      limits:
+        memory: "64Mi"
+        cpu: "250m"
+    volumeMounts:
+    - name: envoy-config
+      mountPath: "/run/envoy"
+      readOnly: true
+    - name: spiffe-workload-api
+      mountPath: /spiffe-workload-api
+      readOnly: true
+  volumes:
+  - name: envoy-config
+    configMap:
+      name: client-envoy
+  - name: spiffe-workload-api
+    csi:
+      driver: "csi.spiffe.io"
+      readOnly: true

@@ -1,0 +1,44 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: chess-analyzer
+  namespace: chess-analyzer
+  labels:
+    app: chess-analyzer
+spec:
+  serviceAccountName: chess-analyzer
+  containers:
+  - name: chess-analyzer
+    image: ghcr.io/josephchapman/chess-analyzer:master
+    resources:
+      limits:
+        memory: "64Mi"
+        cpu: "250m"
+    ports:
+    - containerPort: 24377
+  - name: envoy
+    image: envoyproxy/envoy:v1.25.1
+    imagePullPolicy: Always
+    args: ["-l", "debug", "--local-address-ip-version", "v4", "-c", "/run/envoy/envoy.yaml"]
+    resources:
+      limits:
+        memory: "64Mi"
+        cpu: "250m"
+    ports:
+    - containerPort: 9001
+    volumeMounts:
+    - name: envoy-config
+      mountPath: "/run/envoy"
+      readOnly: true
+    - name: spiffe-workload-api
+      mountPath: /spiffe-workload-api
+      readOnly: true
+  volumes:
+  - name: envoy-config
+    configMap:
+      name: chess-analyzer-envoy
+  - name: spiffe-workload-api
+    csi:
+      driver: "csi.spiffe.io"
+      readOnly: true
